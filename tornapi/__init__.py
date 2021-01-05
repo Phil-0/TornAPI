@@ -1,10 +1,11 @@
 import datetime
-from .items import Item
+import logging
 import requests
-from .stocks import Stock
 from typing import Iterable, Union
 
 from .errors import *
+from .items import Item
+from .stocks import Stock
 
 
 def get_apikey() -> str:
@@ -18,10 +19,9 @@ class TornAPI:
     def __init__(self, api_key: str):
         self.api_key = api_key
 
-    def _get(self, section: str, id_='', selections: Union[Iterable, str] = '') -> dict:
-        """{'error': {'code': 2, 'error': 'Incorrect key'}}"""
+    def _get(self, section: str, id_: Union[int, str] = '', selections: Union[Iterable, str] = '') -> dict:
         url = f'https://api.torn.com/{section}/{id_}?selections={selections if isinstance(selections, str) else ",".join(selections)}&key={self.api_key}'
-        print(f'{datetime.datetime.now()} - Checking API: {url}')
+        logging.info(f'{datetime.datetime.now()} - Checking API: {url}')
         r = requests.get(url)
         data = r.json()
         if 'error' in data:
@@ -70,7 +70,7 @@ class TornAPI:
     def stocks(self, stock_id: Union[Stock, int] = '', timestamp: bool = True):
         return self._get('torn', stock_id.value if isinstance(stock_id, Stock) else stock_id, f'stocks{",timestamp" if timestamp else ""}')
 
-    def torn(self, id_='', selections: Union[Iterable, str] = ''):
+    def torn(self, id_: Union[int, str] = '', selections: Union[Iterable, str] = ''):
         return self._get('torn', id_, selections)
 
     def user(self, user_id: Union[int, str] = '', selections: Union[Iterable, str] = ''):
