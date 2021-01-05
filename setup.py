@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='TornAPI',
+    name='phil0-tornapi',
     version='0.1',
     description='An API wrapper for Torn City.',
     url='https://github.com/Phil-0/TornAPI/',
