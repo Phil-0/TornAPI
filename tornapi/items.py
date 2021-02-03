@@ -1145,6 +1145,8 @@ class Item(Enum):
     ChinDiaper = 1144
     TightyWhities = 1145
     Tangerine = 1146
+    HelmetofJustice = 1147
+    BrokenBauble = 1148
 
     def lowest_price(self, t):
         market_cost = t.itemmarket(self)['itemmarket'][0]['cost']
