@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='phil0-tornapi',
-    version='0.2.2',
+    version='0.3',
     description='An API wrapper for Torn City.',
     url='https://github.com/Phil-0/TornAPI/',
     license='GPLv3',
