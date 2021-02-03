@@ -19,10 +19,10 @@ class TornAPI:
     def __init__(self, api_key: str):
         self.api_key = api_key
 
-    def _get(self, section: str, id_: Union[int, str] = '', selections: Union[Iterable, str] = '') -> dict:
+    def _get(self, section: str, id_: Union[int, str] = '', selections: Union[Iterable, str] = '', comment: str = None) -> dict:
         url = f'https://api.torn.com/{section}/{id_}?selections={selections if isinstance(selections, str) else ",".join(selections)}&key={self.api_key}'
         logging.info(f'{datetime.datetime.now()} - Checking API: {url}')
-        r = requests.get(url)
+        r = requests.get(url, params={'comment': comment})
         data = r.json()
         if 'error' in data:
             error_dict = {
@@ -45,35 +45,27 @@ class TornAPI:
             raise error_dict[code](msg)
         return data
 
-    def faction(self, faction_id=None, selections=None):
+    def faction(self, faction_id=None, selections=None, comment: str = None):
         """
-        :param faction_id:
-        :param selections:
         Available fields:
-        applications, armor, armorynews, armorynewsfull, attacknews,
-        attacknewsfull, attacks, attacksfull, basic, boosters, cesium, chain, chains, contributors, crimenews,
-        crimenewsfull, crimes, currency, donations, drugs, fundsnews, fundsnewsfull, mainnews, mainnewsfull, medical,
-        membershipnews, membershipnewsfull, revives, revivesfull, stats, temporary, territory, timestamp, upgrades,
-        weapons
-        :return:
+            applications, armor, armorynews, armorynewsfull, attacknews,
+            attacknewsfull, attacks, attacksfull, basic, boosters, cesium, chain, chains, contributors, crimenews,
+            crimenewsfull, crimes, currency, donations, drugs, fundsnews, fundsnewsfull, mainnews, mainnewsfull, medical,
+            membershipnews, membershipnewsfull, revives, revivesfull, stats, temporary, territory, timestamp, upgrades,
+            weapons
         """
-        return NotImplemented
-        # if faction_id is None:
-        #     user = self.user(selections='profile')
-        #     faction_id = user['faction']['faction_id']
-        # r = requests.get(f'')
+        return self._get('faction', faction_id, selections, comment)
 
-    def itemmarket(self, item_id: Union[Item, int], selections: Union[Iterable, str] = 'itemmarket,timestamp'):
-        r = requests.get(f'https://api.torn.com/market/{item_id.value if hasattr(item_id, "value") else item_id}?selections={selections if isinstance(selections, str) else ",".join(selections)}&key={self.api_key}')
-        return r.json()
+    def itemmarket(self, item_id: Union[Item, int], selections: Union[Iterable, str] = 'itemmarket,timestamp', comment: str = None):
+        return self._get('market', item_id, selections, comment)
 
-    def stocks(self, stock_id: Union[Stock, int] = '', timestamp: bool = True):
-        return self._get('torn', stock_id.value if isinstance(stock_id, Stock) else stock_id, f'stocks{",timestamp" if timestamp else ""}')
+    def stocks(self, stock_id: Union[Stock, int] = '', timestamp: bool = True, comment: str = None):
+        return self._get('torn', stock_id.value if isinstance(stock_id, Stock) else stock_id, f'stocks{",timestamp" if timestamp else ""}', comment=comment)
 
-    def torn(self, id_: Union[int, str] = '', selections: Union[Iterable, str] = ''):
-        return self._get('torn', id_, selections)
+    def torn(self, id_: Union[int, str] = '', selections: Union[Iterable, str] = '', comment: str = None):
+        return self._get('torn', id_, selections, comment)
 
-    def user(self, user_id: Union[int, str] = '', selections: Union[Iterable, str] = ''):
+    def user(self, user_id: Union[int, str] = '', selections: Union[Iterable, str] = '', comment: str = None):
         """
         Available fields: ammo, attacks, attacksfull, bars, basic, battlestats, bazaar, cooldowns, crimes, discord,
                           display, education, events, gym, hof, honors, icons, inventory, jobpoints, medals, merits,
@@ -81,9 +73,6 @@ class TornAPI:
                           receivedevents, refills, revives, revivesfull, stocks, timestamp, travel, weaponexp, workstats
         Available fields (for any user): basic, bazaar, crimes, discord, display, icons, personalstats, profile,
                                          properties, timestamp
-
-        :param user_id:
-        :param selections: enter a field from above or multiple
-        :return:
         """
-        return self._get('user', user_id, selections)
+        return self._get('user', user_id, selections, comment)
+
