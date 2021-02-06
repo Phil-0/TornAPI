@@ -35,24 +35,24 @@ class Stock(Enum):
     WLT = 30
     TCC = 31
 
-    def _get_value(self, torn_api, key):
-        data = torn_api.stocks(self)
+    def _get_value(self, torn_api, key: str, comment: str = None):
+        data = torn_api.stocks(self, timestamp=False, comment=comment)
         try:
             return data['stocks'][str(self.value)][key]
         except KeyError as err:
             logging.error(err)
 
-    def available_shares(self, torn_api) -> int:
-        return self._get_value(torn_api, 'available_shares')
+    def available_shares(self, torn_api, comment: str = None) -> int:
+        return self._get_value(torn_api, 'available_shares', comment)
 
-    def benefit(self, torn_api) -> dict:
-        return self._get_value(torn_api, 'benefit')
+    def benefit(self, torn_api, comment: str = None) -> dict:
+        return self._get_value(torn_api, 'benefit', comment)
 
-    def demand(self, torn_api) -> str:
-        return self._get_value(torn_api, 'demand')
+    def demand(self, torn_api, comment: str = None) -> str:
+        return self._get_value(torn_api, 'demand', comment)
 
-    def forecast(self, torn_api) -> str:
-        return self._get_value(torn_api, 'forecast')
+    def forecast(self, torn_api, comment: str = None) -> str:
+        return self._get_value(torn_api, 'forecast', comment)
 
-    def history(self, torn_api) -> list:
-        return self._get_value(torn_api, 'history')
+    def history(self, torn_api, comment: str = None) -> list:
+        return self._get_value(torn_api, 'history', comment)
