@@ -56,7 +56,7 @@ class TornAPI:
         """
         return self._get('faction', faction_id, selections, comment)
 
-    def itemmarket(self, item_id: Union[Item, int], selections: Union[Iterable, str] = 'itemmarket,timestamp', comment: str = None):
+    def itemmarket(self, item_id: Union[Item, int] = '', selections: Union[Iterable, str] = 'itemmarket,timestamp', comment: str = None):
         return self._get('market', item_id, selections, comment)
 
     def stocks(self, stock_id: Union[Stock, int] = '', timestamp: bool = True, comment: str = None):
