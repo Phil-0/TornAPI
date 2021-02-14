@@ -57,7 +57,7 @@ class TornAPI:
         return self._get('faction', faction_id, selections, comment)
 
     def itemmarket(self, item_id: Union[Item, int] = '', selections: Union[Iterable, str] = 'itemmarket,timestamp', comment: str = None):
-        return self._get('market', item_id, selections, comment)
+        return self._get('market', item_id.value if isinstance(item_id, Item) else item_id, selections, comment)
 
     def stocks(self, stock_id: Union[Stock, int] = '', timestamp: bool = True, comment: str = None):
         return self._get('torn', stock_id.value if isinstance(stock_id, Stock) else stock_id, f'stocks{",timestamp" if timestamp else ""}', comment=comment)
